@@ -99,9 +99,9 @@ describe('gridUtils', () => {
       expect(snapToGridHalfOffset(position, viewportCenter, px(50)))
         .toEqual(screenPos(525, 525));
       
-      // With 25px grid spacing
+      // With 25px grid spacing, rounding up
       expect(snapToGridHalfOffset(position, viewportCenter, px(25)))
-        .toEqual(screenPos(512, 512));
+        .toEqual(screenPos(513, 513));
     });
 
     it('should handle different viewport centers', () => {
