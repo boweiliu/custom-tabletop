@@ -37,9 +37,9 @@ import { screenPos } from './types';
  * @returns The nearest odd integer
  */
 function roundToOdd(value: number): number {
-  // Divide by 2 and round to get position between odd numbers
-  // Multiply by 2 and add 1 to get to the odd number
-  return 2 * Math.floor(value / 2) + 1;
+  const to_round = (value - 1) / 2;
+  const rounded = Math.round(to_round);
+  return 2 * rounded + 1;
 }
 
 /**
@@ -85,8 +85,8 @@ export function snapToGridHalfOffset(
 
   // Convert back to pixels and add viewport center offset
   return screenPos(
-    Math.round(Number(viewportCenter.x) + (snappedGridUnitsX * Number(gridSpacing))),
-    Math.round(Number(viewportCenter.y) + (snappedGridUnitsY * Number(gridSpacing)))
+    Math.floor(Number(viewportCenter.x) + (snappedGridUnitsX * Number(gridSpacing)) + 0.5),
+    Math.floor(Number(viewportCenter.y) + (snappedGridUnitsY * Number(gridSpacing)) + 0.5)
   );
 }
 
@@ -117,3 +117,9 @@ export function getCardCenter(
     Math.round(Number(topLeft.y) + Math.round(Number(height) / 2))
   );
 }
+
+// export private functions for testing
+export const privateFunctions = {
+  roundToOdd,
+  roundToHalf
+};

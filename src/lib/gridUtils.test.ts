@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { snapToGridHalfOffset, getCardTopLeft, getCardCenter } from './gridUtils';
+import { snapToGridHalfOffset, getCardTopLeft, getCardCenter, privateFunctions } from './gridUtils';
 import { screenPos, px } from './types';
 import type { ScreenPosition, Pixels } from './types';
 
@@ -26,7 +26,26 @@ import type { ScreenPosition, Pixels } from './types';
  * - A center point (the viewport center)
  * - A spacing value that determines the distance between grid lines
  */
+
+const { roundToOdd, roundToHalf } = privateFunctions;
+
 describe('gridUtils', () => {
+  describe('roundToOdd', () => {
+    it('should round to the nearest odd number, rounding up', () => {
+      expect(roundToOdd(4)).toEqual(5);
+      expect(roundToOdd(5)).toEqual(5);
+      expect(roundToOdd(6)).toEqual(7);
+    });
+
+    it('should handle decimal values', () => {
+      expect(roundToOdd(4.5)).toEqual(5);
+      expect(roundToOdd(5.5)).toEqual(5);
+      expect(roundToOdd(6.5)).toEqual(7);
+      expect(roundToOdd(7.4)).toEqual(7);
+      expect(roundToOdd(8.4)).toEqual(9);
+    });
+  });
+
   describe('snapToGridHalfOffset', () => {
     // Basic test case
     it('should snap a point to the nearest half-grid position with grid spacing 100', () => {
