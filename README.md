@@ -15,6 +15,17 @@ DO NOT RUN: npx tsc, it generates *.js nonsense which no one needs, and which hi
 npm outdated
 npm upgrade
 
+## annoying warnings in npm i 
+
+
+```
+    "@storybook/svelte": "^8.5.3"
+
+this depends on
+sveltedoc-parser: 4.2.1
+
+which is 3 years old and depends on an old eslint ver.
+
 
 
 # Svelte + TS + Vite
