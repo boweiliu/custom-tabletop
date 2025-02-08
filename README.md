@@ -3,7 +3,7 @@
 npm i
 npm run check
 npm run test
-npm run storybook
+npm run storybook -- --no-open
 npm run dev
 
 npx vitest watch
