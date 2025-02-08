@@ -8,6 +8,7 @@ npm run dev
 
 npx vitest watch
 npx svelte-check --tsconfig ./tsconfig.json --watch
+git clean -fdx
 
 
 
