@@ -7,6 +7,22 @@
   import type { ScreenPosition, CardData, Pixels } from './lib/types';
   import { gridSpacing, cardDimensions, increaseGridSpacing, decreaseGridSpacing, resetGridSpacing } from './lib/stores/gridStore';
   import { GridService, type GridLine } from './lib/services/gridService';
+  // import { setupConvex } from 'convex-svelte';
+	// import { useQuery } from 'convex-svelte';
+	// import { api } from './convex/_generated/api.js';
+  import ConvexTestPage from './ConvexTestPage.svelte';
+
+  const CONVEX_URL = import.meta.env.VITE_CONVEX_URL
+  console.log({CONVEX_URL});
+
+  let convexInitialized = false;
+  onMount(() => {
+    // if (!convexInitialized) {
+    //   setupConvex(CONVEX_URL);
+    //   convexInitialized = true;
+    //   console.log('initialized convex');
+    // }
+  })
   
   let mainElement: HTMLElement;
   let gridService: GridService;
@@ -17,8 +33,6 @@
   let currentCardWidth: Pixels;
   let currentCardHeight: Pixels;
 
-  const CONVEX_URL = import.meta.env.VITE_CONVEX_URL
-  console.log({CONVEX_URL});
 
   gridSpacing.subscribe(value => {
     currentGridSpacing = value;
@@ -89,9 +103,15 @@
       window.removeEventListener('resize', updateLayout);
     };
   });
+
+  console.log('can i use query?')
+  // const query = useQuery(api.tasks.get, {});
+  // query.isLoading
 </script>
 
+Loading
 <main bind:this={mainElement}>
+  <!--<ConvexTestPage /> -->
   <Workspace
     {gridLines}
     {cards}
