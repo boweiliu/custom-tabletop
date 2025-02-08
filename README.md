@@ -6,6 +6,11 @@ npm run test
 npm run storybook
 npm run dev
 
+npx vitest watch
+npx svelte-check --tsconfig ./tsconfig.json --watch
+
+
+
 
 # Svelte + TS + Vite
 
