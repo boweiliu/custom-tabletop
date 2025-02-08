@@ -13,14 +13,14 @@
   import ConvexTestPage from './ConvexTestPage.svelte';
 
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL
-  console.log({CONVEX_URL});
+  // console.log({CONVEX_URL});
 
   let isConvexInitialized = false;
   onMount(() => {
     if (!isConvexInitialized) {
       setupConvex(CONVEX_URL);
       isConvexInitialized = true;
-      console.log('initialized convex ' + CONVEX_URL);
+      console.log('initialized convex');
     }
   })
   
@@ -104,7 +104,7 @@
     };
   });
 
-  console.log('can i use query?')
+  // console.log('can i use query?')
   // const query = useQuery(api.tasks.get, {});
   // query.isLoading
 </script>

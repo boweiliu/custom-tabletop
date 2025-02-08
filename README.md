@@ -37,6 +37,9 @@ svelte-preprocess
 
 ```
 
+## only run once
+npx convex import --table tasks sampleData.jsonl
+
 
 # Svelte + TS + Vite
 
