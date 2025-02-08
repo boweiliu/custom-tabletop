@@ -18,7 +18,7 @@
     "@storybook/addon-interactions": "^7.6.17",
     "@storybook/addon-links": "^7.6.17",
     "@storybook/blocks": "^7.6.17",
-    "@storybook/svelte": "^7.6.17",
+    "@storybook/svelte": "^8.5.3",
     "@storybook/builder-vite": "^8.5.3",
     "@storybook/svelte-vite": "^8.5.3",
     "@storybook/test": "^7.6.17",
@@ -37,9 +37,14 @@
     "typescript": "^5.5.3",
     "vite": "^6.1.0",
     "vitest": "^1.6.1",
-    "eslint": "^9.20.0",
-    "@storybook/svelte": "^8.5.3"
+    "eslint": "^9.20.0"
+  },
+  "overrides": {
+    "sveltedoc-parser": {
+      "eslint": "^9.20.0"
+    }
   },
   "devDependencies": {
+    "sveltedoc-parser": "^4.2.1"
   }
 }
