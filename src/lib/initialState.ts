@@ -16,11 +16,12 @@ export function createInitialCard(
     Math.round(Number(viewportCenter.x)),
     Math.round(Number(viewportCenter.y))
   );
+  const snappedCenter = snapToGridHalfOffset(roundedCenter, viewportCenter, gridSpacing);
   
   return {
     id: crypto.randomUUID(),
     text: '',
-    position: roundedCenter
+    position: snappedCenter
   };
 }
 
