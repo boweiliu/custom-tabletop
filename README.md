@@ -1,6 +1,8 @@
 # START HERE
 
-npm i
+nvm install 18 ; nvm use 18
+git clean -fdx
+rm -rf node_modules ; npm i
 npx convex dev
 npm run check
 npm run test
@@ -9,7 +11,6 @@ npm run dev
 
 npx vitest watch
 npx svelte-check --tsconfig ./tsconfig.json --watch
-git clean -fdx
 
 DO NOT RUN: npx tsc, it generates *.js nonsense which no one needs, and which hides actual changes
 
