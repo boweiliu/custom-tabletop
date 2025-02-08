@@ -1,6 +1,7 @@
 # START HERE
 
 npm i
+npx convex dev
 npm run check
 npm run test
 npm run storybook -- --no-open

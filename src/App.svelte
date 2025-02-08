@@ -7,21 +7,21 @@
   import type { ScreenPosition, CardData, Pixels } from './lib/types';
   import { gridSpacing, cardDimensions, increaseGridSpacing, decreaseGridSpacing, resetGridSpacing } from './lib/stores/gridStore';
   import { GridService, type GridLine } from './lib/services/gridService';
-  // import { setupConvex } from 'convex-svelte';
-	// import { useQuery } from 'convex-svelte';
-	// import { api } from './convex/_generated/api.js';
+  import { setupConvex } from 'convex-svelte';
+	import { useQuery } from 'convex-svelte';
+	import { api } from './convex/_generated/api.js';
   import ConvexTestPage from './ConvexTestPage.svelte';
 
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL
   console.log({CONVEX_URL});
 
-  let convexInitialized = false;
+  let isConvexInitialized = false;
   onMount(() => {
-    // if (!convexInitialized) {
-    //   setupConvex(CONVEX_URL);
-    //   convexInitialized = true;
-    //   console.log('initialized convex');
-    // }
+    if (!isConvexInitialized) {
+      setupConvex(CONVEX_URL);
+      isConvexInitialized = true;
+      console.log('initialized convex ' + CONVEX_URL);
+    }
   })
   
   let mainElement: HTMLElement;
@@ -109,10 +109,11 @@
   // query.isLoading
 </script>
 
-Loading
 <main bind:this={mainElement}>
-  <!--<ConvexTestPage /> -->
-  <Workspace
+  {#if isConvexInitialized}
+    <ConvexTestPage />
+  {/if}
+  <Workspace 
     {gridLines}
     {cards}
     centerPosition={centerPosition}

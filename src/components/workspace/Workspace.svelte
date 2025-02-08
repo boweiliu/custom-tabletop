@@ -38,6 +38,7 @@
 
 <style>
   .workspace {
+    display: none; /* BOWEI TEST */
     position: fixed;
     inset: 0;
     width: 100vw;

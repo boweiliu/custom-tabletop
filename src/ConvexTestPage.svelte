@@ -6,10 +6,13 @@
   const sampleContext = getContext('key');
   console.log({sampleContext});
 
-	const query = {} as any; // useQuery(api.tasks.get, {});
+	const query2 = {} as any; // useQuery(api.tasks.get, {});
+	const query = useQuery(api.tasks.get, {});
+  console.log({query2});
 </script>
 
 <div id="query-result">
+  Bowei
 {#if query.isLoading}
 	Loading...
 {:else if query.error}
