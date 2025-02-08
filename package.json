@@ -45,6 +45,5 @@
     }
   },
   "devDependencies": {
-    "sveltedoc-parser": "^4.2.1"
   }
 }
