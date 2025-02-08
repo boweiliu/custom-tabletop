@@ -151,7 +151,7 @@
       on:focus={preventFocus}
       readonly={!isEditing}
       tabindex="-1"
-    />
+    ></textarea>
   </div>
   <div class="divider"></div>
   <div class="button-container">
