@@ -13,6 +13,7 @@ git clean -fdx
 DO NOT RUN: npx tsc, it generates *.js nonsense which no one needs, and which hides actual changes
 
 npm outdated
+npm upgrade
 
 
 
