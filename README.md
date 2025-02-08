@@ -24,8 +24,16 @@ npm upgrade
 this depends on
 sveltedoc-parser: 4.2.1
 
-which is 3 years old and depends on an old eslint ver.
+which is 3 years old and depends on an old eslint ver. fix by overrides
 
+similarly,
+
+    "@storybook/svelte-vite": "^8.5.3",
+
+this depends on 
+svelte-preprocess
+
+```
 
 
 # Svelte + TS + Vite
