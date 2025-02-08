@@ -3,8 +3,8 @@ set -x
 
 npm i --save-dev sveltedoc-parser@latest
 npm i --save-dev svelte-preprocess@latest
-exit 0
 npm i --save-dev @storybook/svelte-vite@latest
+exit 0
 npm i --save-dev @storybook/svelte@latest
 npm i --save-dev @storybook/addon-essentials@latest
 npm i --save-dev @storybook/addon-interactions@latest
