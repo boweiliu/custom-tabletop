@@ -100,6 +100,17 @@ export class GridService {
   }
 
   /**
+   * Gets the grid position for a given screen position
+   * @param position The screen position to convert
+   * @returns The grid position as an object with x and y properties
+   */
+  getCardGridPosition(position: ScreenPosition): { x: number, y: number } {
+    const x = ((Number(position.x) - Number(this.viewportCenter.x)) / Number(this.gridSpacing));
+    const y = ((Number(position.y) - Number(this.viewportCenter.y)) / Number(this.gridSpacing));
+    return { x, y };
+  }
+
+  /**
    * Gets the viewport center position
    */
   getViewportCenter(): ScreenPosition {

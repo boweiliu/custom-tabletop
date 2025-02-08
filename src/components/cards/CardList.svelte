@@ -29,6 +29,7 @@
     id={card.id}
     text={card.text}
     position={card.position}
+    gridPosition={card.gridPosition}
     {centerPosition}
     {gridSpacing}
     width={cardWidth}

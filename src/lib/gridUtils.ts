@@ -104,6 +104,20 @@ export function getCardTopLeft(
   );
 }
 
+export function getCardTopLeftFromGrid(
+  gridPosition: { x: number, y: number },
+  gridSpacing: Pixels,
+  viewportCenter: ScreenPosition,
+  cardWidth: Pixels,
+  cardHeight: Pixels
+): ScreenPosition {
+  const center = screenPos(
+    Math.round(Number(viewportCenter.x) + (gridPosition.x * Number(gridSpacing))),
+    Math.round(Number(viewportCenter.y) + (gridPosition.y * Number(gridSpacing)))
+  );
+  return getCardTopLeft(center, cardWidth, cardHeight);
+}
+
 /**
  * Calculates the center screen position of a card given its top-left position
  */

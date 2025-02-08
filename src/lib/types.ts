@@ -26,6 +26,7 @@ export interface CardData {
   id: string;
   text: string;
   position: ScreenPosition; // Card positions are stored in screen coordinates
+  gridPosition: { x: number, y: number }; // Grid positions are stored in grid units
 }
 
 /**

@@ -3,11 +3,12 @@
   import type { ScreenPosition, Pixels } from './types';
   import { screenPos } from './types';
   import { cardStore } from './cardStore';
-  import { snapToGridHalfOffset, getCardTopLeft } from './gridUtils';
+  import { snapToGridHalfOffset, getCardTopLeft, getCardTopLeftFromGrid } from './gridUtils';
 
   export let id: string;
   export let text: string;
   export let position: ScreenPosition;
+  export let gridPosition: { x: number, y: number };
   export let centerPosition: ScreenPosition;
   export let gridSpacing: Pixels;
   export let width: Pixels;
@@ -23,7 +24,8 @@
   let isEditing = false;
 
   // Convert center position to top-left for rendering
-  $: topLeftPosition = getCardTopLeft(position, width, height);
+  // $: topLeftPosition = getCardTopLeft(position, width, height);
+  $: topLeftPosition = getCardTopLeftFromGrid(gridPosition, gridSpacing, centerPosition, width, height);
 
   function startDrag(clientX: number, clientY: number) {
     if (!isEditing) {

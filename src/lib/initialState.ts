@@ -21,22 +21,10 @@ export function createInitialCard(
   return {
     id: crypto.randomUUID(),
     text: '',
-    position: snappedCenter
+    position: snappedCenter,
+    gridPosition: {
+      x: 0.5,
+      y: 0.5,
+    }
   };
-}
-
-/**
- * Gets the center position of the viewport
- * @param width Viewport width in pixels
- * @param height Viewport height in pixels
- * @returns Center position in screen coordinates
- */
-export function getInitialPosition(
-  width: number, 
-  height: number
-): ScreenPosition {
-  return screenPos(
-    Math.round(width / 2),
-    Math.round(height / 2)
-  );
 }

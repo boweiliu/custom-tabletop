@@ -33,7 +33,8 @@ export const WithOneCard: Story = {
     cards: [{
       id: '1',
       text: 'Example Card',
-      position: screenPos(500, 500)
+      position: screenPos(500, 500),
+      gridPosition: { x: 0.5, y: 0.5 }
     }],
     centerPosition: screenPos(500, 500),
     gridSpacing: px(50),

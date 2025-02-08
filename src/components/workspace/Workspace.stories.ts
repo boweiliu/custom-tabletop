@@ -47,12 +47,14 @@ export const WithCards: Story = {
       {
         id: '1',
         text: 'Example Card 1',
-        position: screenPos(500, 500)
+        position: screenPos(500, 500),
+        gridPosition: { x: 0.5, y: 0.5 }
       },
       {
         id: '2',
         text: 'Example Card 2',
-        position: screenPos(700, 500)
+        position: screenPos(700, 500),
+        gridPosition: { x: 2.5, y: 2.5 }
       }
     ]
   }

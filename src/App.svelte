@@ -61,7 +61,10 @@
 
   function handlePositionChange(event: CustomEvent<{ cardId: string; position: ScreenPosition }>) {
     const { cardId, position } = event.detail;
-    cardStore.updateCard(cardId, { position });
+    // also compute the new grid coords from the position
+    const gridPosition = gridService.getCardGridPosition(position);
+
+    cardStore.updateCard(cardId, { position, gridPosition });
   }
 
   function addNewCard() {
