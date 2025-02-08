@@ -17,6 +17,9 @@
   let currentCardWidth: Pixels;
   let currentCardHeight: Pixels;
 
+  const CONVEX_URL = import.meta.env.VITE_CONVEX_URL
+  console.log({CONVEX_URL});
+
   gridSpacing.subscribe(value => {
     currentGridSpacing = value;
     if (gridService) {
