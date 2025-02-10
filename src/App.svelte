@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import Controls from './components/controls/Controls.svelte';
   import Workspace from './components/workspace/Workspace.svelte';
-  import { cardStore } from './lib/cardStore';
+  import { createCardStore } from './lib/cardStore';
   import { createInitialCard } from './lib/initialState';
   import type { ScreenPosition, CardData, Pixels } from './lib/types';
   import { gridSpacing, cardDimensions, increaseGridSpacing, decreaseGridSpacing, resetGridSpacing } from './lib/stores/gridStore';
@@ -51,43 +51,48 @@
     }
   });
 
+  let convexClient: ConvexClient | undefined = undefined;
+  let cardStore: ReturnType<typeof createCardStore> | undefined = undefined;
+  onMount(() => {
+    try {
+      convexClient = useConvexClient();
+      cardStore = createCardStore(convexClient);
   cardStore.subscribe(value => {
     cards = value;
   });
+    } catch (error) {
+      console.error('Failed to grab Convex client:', error);
+    }
+  })
+
+  // cardStore.subscribe(value => {
+  //   cards = value;
+  // });
 
   function updateCenterPosition() {
     if (!gridService) return;
     centerPosition = gridService.getViewportCenter();
   }
 
-  let convexClient: ConvexClient | undefined = undefined;
-  onMount(() => {
-    try {
-      convexClient = useConvexClient();
-    } catch (error) {
-      console.error('Failed to grab Convex client:', error);
-    }
-  })
-
   function handlePositionChange(event: CustomEvent<{ cardId: string; position: ScreenPosition }>) {
     const { cardId, position } = event.detail;
     // also compute the new grid coords from the position
     const gridPosition = gridService.getCardGridPosition(position);
 
-    cardStore.updateCard(cardId, { position, gridPosition }, convexClient  );
+    cardStore!.updateCard(cardId, { position, gridPosition }, convexClient  );
   }
 
   function addNewCard() {
     if (!centerPosition || !currentGridSpacing) return;
     const newCard = createInitialCard(centerPosition, currentGridSpacing);
-    cardStore.addCard(newCard);
+    cardStore!.addCard(newCard);
   }
 
   function resetSimulation() {
     if (!centerPosition || !currentGridSpacing) return;
     resetGridSpacing();
     const initialCard = createInitialCard(centerPosition, currentGridSpacing);
-    cardStore.reset(initialCard);
+    cardStore!.reset(initialCard);
   }
   
   onMount(() => {

@@ -9,5 +9,5 @@ export default defineSchema({
       x: v.number(),
       y: v.number(),
     }),
-  }),
+  }).index("my_id", ["id"]),
 });

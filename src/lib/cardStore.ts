@@ -16,25 +16,31 @@ function loadCards(): CardData[] {
   }
 }
 
-function createCardStore() {
+export function createCardStore(client?: ConvexClient) {
   const { subscribe, update, set } = writable<CardData[]>(loadCards());
-	// const query = useMutation(api.cards.upsertCardById, {});
 
   return {
     subscribe,
-    updateCard: (cardId: string, changes: Partial<CardData>, client?: ConvexClient) => {
+    updateCard: (cardId: string, changes: Partial<CardData>, _client?: ConvexClient) => {
       update(cards => {
         // const client = useConvexClient();
-        const newCards = cards.map(card => 
-          card.id === cardId ? { ...card, ...changes } : card
-        );
+        let updatedCard: CardData | undefined;
+        const newCards = cards.map(card => {
+          if (card.id === cardId) {
+            updatedCard = { ...card, ...changes };
+            return updatedCard;
+          } else {
+            return card;
+          }
+        });
+        const fixedCard = { ...updatedCard!, position: undefined }!!;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newCards));
         // Call convex to update in the db as well
         if (client) {
-          client.mutation(api.tasks.testUpdate, {}).then(() => {
-            console.log('finished client mutation await');
+          client.mutation(api.cards.upsertCardById, { card: fixedCard }).then(() => {
+            // console.log('finished client mutation await');
           })
-          console.log('called client mutation without awaiting')
+          // console.log('called client mutation without awaiting')
         }
 
         return newCards;

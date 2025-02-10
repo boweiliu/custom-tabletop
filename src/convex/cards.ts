@@ -68,7 +68,7 @@ export const upsertCardById = mutation({
     // first find the card by id
     const card = await ctx.db
       .query("cards")
-      .withIndex("by_id", (q) => q.eq("id", args.card.id)).unique();
+      .withIndex("my_id", (q) => q.eq("id", args.card.id)).unique();
     if (!card) {
       // insert it
       return await ctx.db.insert("cards", args.card);
