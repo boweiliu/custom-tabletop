@@ -10,4 +10,9 @@ export default defineSchema({
       y: v.number(),
     }),
   }).index("my_id", ["id"]),
+    tasks: defineTable({
+            isCompleted: v.boolean(),
+            text: v.string(),
+          
+    }),
 });
