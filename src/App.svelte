@@ -7,7 +7,8 @@
   import type { ScreenPosition, CardData, Pixels } from './lib/types';
   import { gridSpacing, cardDimensions, increaseGridSpacing, decreaseGridSpacing, resetGridSpacing } from './lib/stores/gridStore';
   import { GridService, type GridLine } from './lib/services/gridService';
-  import { setupConvex } from 'convex-svelte';
+  import { setupConvex, useConvexClient } from 'convex-svelte';
+  import type { ConvexClient } from 'convex/browser';
 	import { useQuery } from 'convex-svelte';
 	import { api } from './convex/_generated/api.js';
   import ConvexTestPage from './ConvexTestPage.svelte';
@@ -59,12 +60,21 @@
     centerPosition = gridService.getViewportCenter();
   }
 
+  let convexClient: ConvexClient | undefined = undefined;
+  onMount(() => {
+    try {
+      convexClient = useConvexClient();
+    } catch (error) {
+      console.error('Failed to grab Convex client:', error);
+    }
+  })
+
   function handlePositionChange(event: CustomEvent<{ cardId: string; position: ScreenPosition }>) {
     const { cardId, position } = event.detail;
     // also compute the new grid coords from the position
     const gridPosition = gridService.getCardGridPosition(position);
 
-    cardStore.updateCard(cardId, { position, gridPosition });
+    cardStore.updateCard(cardId, { position, gridPosition }, convexClient  );
   }
 
   function addNewCard() {
