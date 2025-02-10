@@ -4,6 +4,7 @@
   import { screenPos } from './types';
   import { cardStore } from './cardStore';
   import { snapToGridHalfOffset, getCardTopLeft, getCardTopLeftFromGrid } from './gridUtils';
+    import { useConvexClient } from 'convex-svelte';
 
   export let id: string;
   export let text: string;
@@ -113,9 +114,10 @@
     }
   }
 
+  const convexClient = useConvexClient();
   function updateText(newText: string) {
     text = newText;
-    cardStore.updateCard(id, { text: newText });
+    cardStore.updateCard(id, { text: newText }, convexClient);
   }
 
   function handleDelete() {
