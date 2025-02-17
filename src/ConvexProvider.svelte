@@ -1,10 +1,10 @@
-<script lang="ts" context="module">
+<script lang="ts">
   import type { ConvexClient } from 'convex/browser';
   import { onMount } from 'svelte';
   import { setupConvex, useConvexClient } from 'convex-svelte';
   import type { Snippet } from 'svelte';
 
-  const { children }: { children: Snippet } = $props<{ children: Snippet; }>();
+  const { children }: { children: Snippet } = $props();
 
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
 
@@ -32,7 +32,7 @@
     <p>Failed to initialize Convex: {error.message}</p>
   </div>
 {:else if isConvexInitialized && convexClient}
-  {@render children({ convexClient })}
+  {@render children()}
 {:else}
   <div class="loading">Initializing Convex...</div>
 {/if}
