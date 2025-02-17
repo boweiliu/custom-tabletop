@@ -1,13 +1,29 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { vi } from 'vitest';
+
+// Hoist the mock to ensure it's loaded before any imports
+const mockClient = {
+  mutation: vi.fn(),
+  query: vi.fn(() => ({
+    data: null,
+    isLoading: false,
+    error: null,
+  })),
+};
+
+vi.mock('convex-svelte', async () => ({
+  setupConvex: vi.fn(),
+  useConvexClient: vi.fn(() => mockClient),
+  __MOCK_IDENTIFIER__: 'convex-svelte-mock',
+  useQuery: vi.fn(() => ({ 
+    data: null, 
+    isLoading: false, 
+    error: null 
+  }))
+}), { eager: true });
+
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render } from '@testing-library/svelte';
 import App from './App.svelte';
-
-vi.mock('convex-svelte', () => ({
-  __MOCK_IDENTIFIER__: 'convex-svelte-mock',
-  setupConvex: vi.fn(),
-  useConvexClient: vi.fn(),
-  useQuery: vi.fn(() => ({ data: null, isLoading: false, error: null })),
-}));
 
 describe('App', () => {
   beforeEach(() => {
@@ -45,14 +61,15 @@ describe('App', () => {
 
   it('verifies convex-svelte mock is being used', async () => {
     // Import the mocked module
-    const { setupConvex, useConvexClient, useQuery, __MOCK_IDENTIFIER__ } = await import('convex-svelte');
-    
-    // Verify we're using our mock by checking the identifier
-    expect(__MOCK_IDENTIFIER__).toBe('convex-svelte-mock');
+    const f = await import('convex-svelte');
+    const { setupConvex, useConvexClient, useQuery, __MOCK_IDENTIFIER__ } = f as any
     
     // Log out the imported values to see what we got
-    console.log('Imported from convex-svelte:', { setupConvex, useConvexClient, useQuery, __MOCK_IDENTIFIER__ });
+    // console.log('Imported from convex-svelte:', f);
     
+    // Verify mock identifier
+    expect(__MOCK_IDENTIFIER__).toBe('convex-svelte-mock');
+
     // Verify setupConvex is a mock function
     expect(setupConvex).toBeDefined();
     expect(vi.isMockFunction(setupConvex)).toBe(true);
@@ -60,7 +77,19 @@ describe('App', () => {
     // Verify useConvexClient is a mock function
     expect(useConvexClient).toBeDefined();
     expect(vi.isMockFunction(useConvexClient)).toBe(true);
-    
+
+    // Verify useQuery is a mock function
+    expect(useQuery).toBeDefined();
+    expect(vi.isMockFunction(useQuery)).toBe(true);
+
+    // Call useQuery to verify it returns expected mock data
+    const queryResult = (useQuery as any)();
+    expect(queryResult).toEqual({
+      data: null,
+      isLoading: false,
+      error: null
+    });
+    // console.log({f})
   });
 
   it('renders add card button', () => {
