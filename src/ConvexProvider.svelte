@@ -8,8 +8,7 @@
 
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
 
-  let isConvexInitialized = false;
-  let convexClient: ConvexClient | undefined = undefined;
+  let isConvexInitialized = $state(false);
   let error: Error | null = null;
 
   onMount(() => {
@@ -17,8 +16,8 @@
       if (!isConvexInitialized) {
         setupConvex(CONVEX_URL);
         isConvexInitialized = true;
-        convexClient = useConvexClient();
         console.log('Initialized Convex');
+        window.alert('Initialized Convex');
       }
     } catch (e) {
       error = e instanceof Error ? e : new Error('Failed to initialize Convex');
@@ -31,7 +30,7 @@
   <div class="error">
     <p>Failed to initialize Convex: {error.message}</p>
   </div>
-{:else if isConvexInitialized && convexClient}
+{:else if isConvexInitialized}
   {@render children()}
 {:else}
   <div class="loading">Initializing Convex...</div>
