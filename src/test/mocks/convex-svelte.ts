@@ -11,7 +11,7 @@ const mockClient = {
 };
 
 // Add a unique identifier to verify this mock is being used
-export const __MOCK_IDENTIFIER__ = 'convex-svelte-mock';
+export const __MOCK_IDENTIFIER__ = 'convex-svelte-mock__mocks__';
 
 export const setupConvex = vi.fn();
 export const useConvexClient = vi.fn(() => mockClient);
