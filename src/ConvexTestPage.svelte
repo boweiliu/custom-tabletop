@@ -4,11 +4,11 @@
   import { getContext, setContext, untrack } from 'svelte';
 
   const sampleContext = getContext('key');
-  console.log({sampleContext});
+//   console.log({sampleContext});
 
 	const query2 = {} as any; // useQuery(api.tasks.get, {});
 	const query = useQuery(api.tasks.get, {});
-  console.log({query2});
+//   console.log({query2});
 </script>
 
 <div id="query-result">
