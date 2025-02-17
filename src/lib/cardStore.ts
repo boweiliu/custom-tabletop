@@ -16,7 +16,16 @@ function loadCards(): CardData[] {
   }
 }
 
-export function createCardStore(client?: ConvexClient) {
+let cardStoreInstance: ReturnType<typeof createCardStore> | null = null;
+
+export function getCardStore(client?: ConvexClient) {
+  if (!cardStoreInstance) {
+    cardStoreInstance = createCardStore(client);
+  }
+  return cardStoreInstance;
+}
+
+function createCardStore(client?: ConvexClient) {
   const { subscribe, update, set } = writable<CardData[]>(loadCards());
 
   return {
@@ -24,10 +33,13 @@ export function createCardStore(client?: ConvexClient) {
     updateCard: (cardId: string, changes: Partial<CardData>, _client?: ConvexClient) => {
       update(cards => {
         // const client = useConvexClient();
+        console.log('updating card', cardId, changes)
         let updatedCard: CardData | undefined;
         const newCards = cards.map(card => {
           if (card.id === cardId) {
+            console.log('old', card)
             updatedCard = { ...card, ...changes };
+            console.log('new', updatedCard)
             return updatedCard;
           } else {
             return card;
@@ -67,6 +79,3 @@ export function createCardStore(client?: ConvexClient) {
     getCards: () => loadCards()
   };
 }
-
-// Create and export the store instance
-export const cardStore = createCardStore();

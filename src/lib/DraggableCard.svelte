@@ -2,7 +2,7 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import type { ScreenPosition, Pixels } from './types';
   import { screenPos } from './types';
-  import { createCardStore  } from './cardStore';
+  import { getCardStore } from './cardStore';
   import { snapToGridHalfOffset, getCardTopLeft, getCardTopLeftFromGrid } from './gridUtils';
     import { useConvexClient } from 'convex-svelte';
 
@@ -115,7 +115,7 @@
   }
 
   const convexClient = useConvexClient();
-  const cardStore = createCardStore(convexClient);
+  const cardStore = getCardStore(convexClient);
 
   function updateText(newText: string) {
     text = newText;

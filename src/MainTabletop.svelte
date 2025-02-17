@@ -4,7 +4,7 @@
   import type { ConvexClient } from 'convex/browser';
   import Controls from './components/controls/Controls.svelte';
   import Workspace from './components/workspace/Workspace.svelte';
-  import { createCardStore } from './lib/cardStore';
+  import { getCardStore } from './lib/cardStore';
   import { createInitialCard } from './lib/initialState';
   import type { ScreenPosition, CardData, Pixels } from './lib/types';
   import { gridSpacing, cardDimensions, increaseGridSpacing, decreaseGridSpacing, resetGridSpacing } from './lib/stores/gridStore';
@@ -12,7 +12,7 @@
   import ConvexTestPage from './ConvexTestPage.svelte';
 
   const convexClient = useConvexClient();
-  const cardStore = createCardStore(convexClient);
+  const cardStore = getCardStore(convexClient);
   
   let mainElement: HTMLElement;
   let gridService: GridService;
