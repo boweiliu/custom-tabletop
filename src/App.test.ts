@@ -6,7 +6,7 @@ vi.mock('convex-svelte', () => ({
   __MOCK_IDENTIFIER__: 'convex-svelte-mock',
   setupConvex: vi.fn(),
   useConvexClient: vi.fn(),
-  useQuery: null,
+  useQuery: vi.fn(() => ({ data: null, isLoading: false, error: null })),
 }));
 
 describe('App', () => {
@@ -22,7 +22,7 @@ describe('App', () => {
     const localStorageMock = {
       getItem: vi.fn(() => '50'), // Return default grid spacing
       setItem: vi.fn(),
-      clear: vi.fn()
+      clear: vi.fn(),
     };
     Object.defineProperty(window, 'localStorage', {
       value: localStorageMock
@@ -61,8 +61,6 @@ describe('App', () => {
     expect(useConvexClient).toBeDefined();
     expect(vi.isMockFunction(useConvexClient)).toBe(true);
     
-    // Verify useQuery matches our mock
-    expect(useQuery).toBe(null); // Since we set it to null in our mock
   });
 
   it('renders add card button', () => {
