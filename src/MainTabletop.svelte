@@ -11,6 +11,9 @@
   import { GridService, type GridLine } from './lib/services/gridService';
   import ConvexTestPage from './ConvexTestPage.svelte';
 
+  const convexClient = useConvexClient();
+  const cardStore = createCardStore(convexClient);
+  
   let mainElement: HTMLElement;
   let gridService: GridService;
   let gridLines: GridLine[] = [];
@@ -19,9 +22,10 @@
   let currentGridSpacing: Pixels;
   let currentCardWidth: Pixels;
   let currentCardHeight: Pixels;
-  let cardStore: ReturnType<typeof createCardStore>;
 
-  const convexClient = useConvexClient();
+  cardStore.subscribe(value => {
+    cards = value;
+  });
 
   gridSpacing.subscribe(value => {
     currentGridSpacing = value;
@@ -37,13 +41,6 @@
     if (gridService) {
       updateCenterPosition();
     }
-  });
-
-  onMount(() => {
-    cardStore = createCardStore(convexClient);
-    cardStore.subscribe(value => {
-      cards = value;
-    });
   });
 
   function updateCenterPosition() {
@@ -107,7 +104,7 @@
     gridSpacing={currentGridSpacing}
     cardWidth={currentCardWidth}
     cardHeight={currentCardHeight}
-    onPositionChange={handlePositionChange}
+    on:positionChange={handlePositionChange}
   />
   
   <Controls

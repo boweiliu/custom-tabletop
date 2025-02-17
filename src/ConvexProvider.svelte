@@ -17,7 +17,6 @@
         setupConvex(CONVEX_URL);
         isConvexInitialized = true;
         console.log('Initialized Convex');
-        window.alert('Initialized Convex');
       }
     } catch (e) {
       error = e instanceof Error ? e : new Error('Failed to initialize Convex');
