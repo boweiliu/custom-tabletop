@@ -9,7 +9,7 @@
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
 
   let isConvexInitialized = $state(false);
-  let error: Error | null = null;
+  let error: Error | null = $state(null);
 
   onMount(() => {
     try {
