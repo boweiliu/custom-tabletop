@@ -8,6 +8,7 @@
 
 	const query2 = {} as any; // useQuery(api.tasks.get, {});
 	const query = useQuery(api.tasks.get, {});
+	console.log({useQuery})
 //   console.log({query2});
 </script>
 
