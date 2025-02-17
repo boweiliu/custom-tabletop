@@ -1,6 +1,8 @@
 import { vi } from 'vitest';
+vi.mock('convex-svelte', async () => {
+  return mockSvelte;
+});
 
-// Hoist the mock to ensure it's loaded before any imports
 const mockClient = {
   mutation: vi.fn(),
   query: vi.fn(() => ({
@@ -10,7 +12,9 @@ const mockClient = {
   })),
 };
 
-vi.mock('convex-svelte', async () => ({
+// Hoist the mock to ensure it's loaded before any imports
+const mockSvelte = vi.hoisted(() => {
+return {
   setupConvex: vi.fn(),
   useConvexClient: vi.fn(() => mockClient),
   __MOCK_IDENTIFIER__: 'convex-svelte-mock',
@@ -19,7 +23,9 @@ vi.mock('convex-svelte', async () => ({
     isLoading: false, 
     error: null 
   }))
-}), { eager: true });
+};
+})
+
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render } from '@testing-library/svelte';
@@ -77,6 +83,14 @@ describe('App', () => {
     // Verify useConvexClient is a mock function
     expect(useConvexClient).toBeDefined();
     expect(vi.isMockFunction(useConvexClient)).toBe(true);
+
+    // check method on useConvexClient
+    const client = useConvexClient();
+    expect(client).toBeDefined();
+    expect(client.mutation).toBeDefined();
+    expect(client.query).toBeDefined();
+    expect(client.mutation).toBe(mockClient.mutation);
+    expect(client.query).toBe(mockClient.query);
 
     // Verify useQuery is a mock function
     expect(useQuery).toBeDefined();
