@@ -37,7 +37,7 @@ function createCardStore(client?: ConvexClient) {
   const { subscribe, update, set } = writable<CardData[]>(loadCards());
 
   // Use useQuery to subscribe to getAll query
-  const query = useQuery(api.cards.getAll);
+  const query = useQuery(api.cards.getAll, {});
 
   // Watch for changes in the query data
   $: if (!query.isLoading && !query.error) {
