@@ -4,6 +4,11 @@ import { useConvexClient, useQuery } from 'convex-svelte';
 import type { ConvexClient } from 'convex/browser';
 import { api } from '../convex/_generated/api.js';
 
+
+/**
+ * TODO: change from writeable to $state using .svelte.ts
+ */
+
 const STORAGE_KEY = 'cards';
 
 function loadCards(): CardData[] {
