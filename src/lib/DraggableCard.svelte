@@ -4,7 +4,7 @@
   import { screenPos } from './types';
   import { getCardStore } from './cardStore';
   import { snapToGridHalfOffset, getCardTopLeft, getCardTopLeftFromGrid } from './gridUtils';
-    import { useConvexClient } from 'convex-svelte';
+  import { useConvexClient } from 'convex-svelte';
 
   export let id: string;
   export let text: string;
@@ -20,6 +20,7 @@
   }>();
 
   let textarea: HTMLTextAreaElement;
+  let dragArea: HTMLDivElement;
   let isDragging = false;
   let dragOffset: ScreenPosition = screenPos(0, 0);
   let isEditing = false;
@@ -28,10 +29,25 @@
   // $: topLeftPosition = getCardTopLeft(position, width, height);
   $: topLeftPosition = getCardTopLeftFromGrid(gridPosition, gridSpacing, centerPosition, width, height);
 
+  function toggleEdit() {
+    isEditing = !isEditing;
+    if (isEditing) {
+      textarea.focus();
+    } else {
+      textarea.blur();
+    }
+  }
+
+  function preventFocus(event: FocusEvent) {
+    if (!isEditing) {
+      event.preventDefault();
+      textarea.blur();
+    }
+  }
+
   function startDrag(clientX: number, clientY: number) {
     if (!isEditing) {
       isDragging = true;
-      // Calculate offset from the mouse position to the card's top-left corner
       dragOffset = screenPos(
         clientX - Number(topLeftPosition.x),
         clientY - Number(topLeftPosition.y)
@@ -42,19 +58,16 @@
   function handleDrag(clientX: number, clientY: number) {
     if (!isDragging) return;
     
-    // Calculate the new top-left position
     const newTopLeft = screenPos(
       clientX - Number(dragOffset.x),
       clientY - Number(dragOffset.y)
     );
 
-    // Convert to center position
     const newCenter = screenPos(
       newTopLeft.x + Number(width) / 2,
       newTopLeft.y + Number(height) / 2
     );
     
-    // Snap the center position to grid
     const snappedCenter = snapToGridHalfOffset(newCenter, centerPosition, gridSpacing);
     dispatch('positionChange', snappedCenter);
   }
@@ -64,7 +77,7 @@
   }
 
   function handleMouseDown(event: MouseEvent) {
-    if (event.target === textarea && !isEditing) {
+    if (!isEditing) {
       event.preventDefault();
       startDrag(event.clientX, event.clientY);
     }
@@ -79,7 +92,7 @@
   }
 
   function handleTouchStart(event: TouchEvent) {
-    if (event.target === textarea && !isEditing) {
+    if (!isEditing) {
       event.preventDefault();
       const touch = event.touches[0];
       startDrag(touch.clientX, touch.clientY);
@@ -98,22 +111,6 @@
     stopDrag();
   }
 
-  function toggleEdit() {
-    isEditing = !isEditing;
-    if (isEditing) {
-      textarea.focus();
-    } else {
-      textarea.blur();
-    }
-  }
-
-  function preventFocus(event: FocusEvent) {
-    if (!isEditing) {
-      event.preventDefault();
-      textarea.blur();
-    }
-  }
-
   const convexClient = useConvexClient();
   const cardStore = getCardStore(convexClient);
 
@@ -127,16 +124,7 @@
   }
 
   onMount(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd);
-
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
     };
   });
 </script>
@@ -144,20 +132,31 @@
 <div 
   class="card"
   style="left: {Number(topLeftPosition.x)}px; top: {Number(topLeftPosition.y)}px; width: {Number(width)}px; height: {Number(height)}px;"
-  on:touchstart={handleTouchStart}
+  on:mousemove={handleMouseMove}
+  on:mouseup={handleMouseUp}
+  on:mouseleave={handleMouseUp}
+  on:touchmove={handleTouchMove}
+  on:touchend={handleTouchEnd}
+  on:touchcancel={handleTouchEnd}
 >
-  <div class="textarea-container" class:editing={isEditing}>
-    <textarea 
-      bind:this={textarea}
-      value={text}
-      on:input={(e) => updateText(e.currentTarget.value)}
-      placeholder="<click edit to enter text>"
-      class:editing={isEditing}
-      on:mousedown={handleMouseDown}
-      on:focus={preventFocus}
-      readonly={!isEditing}
-      tabindex="-1"
-    ></textarea>
+  <div 
+    class="drag-area"
+    bind:this={dragArea}
+    on:mousedown|stopPropagation={handleMouseDown}
+    on:touchstart|stopPropagation={handleTouchStart}
+  >
+    <div class="textarea-container" class:editing={isEditing}>
+      <textarea 
+        bind:this={textarea}
+        value={text}
+        on:input={(e) => updateText(e.currentTarget.value)}
+        placeholder="<click edit to enter text>"
+        class:editing={isEditing}
+        on:focus={preventFocus}
+        readonly={!isEditing}
+        tabindex="-1"
+      ></textarea>
+    </div>
   </div>
   <div class="divider"></div>
   <div class="button-container">
@@ -197,18 +196,26 @@
     box-shadow: 0 2px 4px var(--shadow-color);
     display: flex;
     flex-direction: column;
-    cursor: move;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
     touch-action: none;
   }
 
-  .textarea-container {
+  .drag-area {
     height: calc(100% - var(--button-height) - var(--textarea-border-width));
-    padding: var(--textarea-padding);
+    cursor: move;
     border-radius: var(--textarea-border-radius) var(--textarea-border-radius) 0 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .textarea-container {
+    flex: 1;
+    padding: var(--textarea-padding);
     transition: background-color 0.2s ease;
+    pointer-events: none;
   }
 
   .textarea-container.editing {
@@ -227,6 +234,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    pointer-events: auto;
   }
 
   textarea.editing {
