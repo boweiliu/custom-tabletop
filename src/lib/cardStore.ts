@@ -4,7 +4,6 @@ import { useConvexClient, useQuery } from 'convex-svelte';
 import type { ConvexClient } from 'convex/browser';
 import { api } from '../convex/_generated/api.js';
 
-
 /**
  * TODO: change from writeable to $state using .svelte.ts
  */
@@ -21,6 +20,10 @@ function loadCards(): CardData[] {
   }
 }
 
+function saveCards(cards: CardData[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+}
+
 let cardStoreInstance: ReturnType<typeof createCardStore> | null = null;
 
 export function getCardStore(client?: ConvexClient) {
@@ -33,12 +36,21 @@ export function getCardStore(client?: ConvexClient) {
 function createCardStore(client?: ConvexClient) {
   const { subscribe, update, set } = writable<CardData[]>(loadCards());
 
+  // Use useQuery to subscribe to getAll query
+  const query = useQuery(api.cards.getAll);
+
+  // Watch for changes in the query data
+  $: if (!query.isLoading && !query.error) {
+    set(query.data || []);
+  }
+
   return {
     subscribe,
+    getCards() {
+      return query.data || [];
+    },
     updateCard: (cardId: string, changes: Partial<CardData>, _client?: ConvexClient) => {
       update(cards => {
-        // const client = useConvexClient();
-        console.log('updating card', cardId, changes)
         let updatedCard: CardData | undefined;
         const newCards = cards.map(card => {
           if (card.id === cardId) {
@@ -51,7 +63,7 @@ function createCardStore(client?: ConvexClient) {
           }
         });
         const fixedCard = { ...updatedCard!, position: undefined }!!;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newCards));
+        saveCards(newCards);
         // Call convex to update in the db as well
         if (client) {
           client.mutation(api.cards.upsertCardById, { card: fixedCard }).then(() => {
@@ -66,21 +78,20 @@ function createCardStore(client?: ConvexClient) {
     addCard: (card: CardData) => {
       update(cards => {
         const newCards = [...cards, card];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newCards));
+        saveCards(newCards);
         return newCards;
       });
     },
     removeCard: (cardId: string) => {
       update(cards => {
         const newCards = cards.filter(card => card.id !== cardId);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newCards));
+        saveCards(newCards);
         return newCards;
       });
     },
     reset: (initialCard: CardData) => {
       set([initialCard]);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([initialCard]));
+      saveCards([initialCard]);
     },
-    getCards: () => loadCards()
   };
 }
